@@ -1,7 +1,7 @@
-// ambil semua tombol drum
+// ambil semua tombol
 const drums = document.querySelectorAll(".drum");
 
-// fungsi untuk memainkan suara
+// fungsi suara
 function playSound(key) {
     let sound;
 
@@ -13,27 +13,29 @@ function playSound(key) {
         case "j": sound = new Audio("sounds/snare.mp3"); break;
         case "k": sound = new Audio("sounds/crash.mp3"); break;
         case "l": sound = new Audio("sounds/kick-bass.mp3"); break;
-        default:
-            console.log("tombol tidak dikenali:", key);
-            return;
+        default: return;
     }
 
-    // play + handle error (biar tidak ada warning)
-    sound.play().catch(err => {
-        console.log("Gagal memutar audio:", err);
-    });
+    sound.play().catch(err => console.log(err));
 }
 
-// event untuk SEMUA device (HP + laptop)
+// 🔥 PENTING: hapus event lama dulu (biar tidak numpuk)
 drums.forEach(button => {
+    button.replaceWith(button.cloneNode(true));
+});
+
+// ambil ulang tombol setelah clone
+const newDrums = document.querySelectorAll(".drum");
+
+// pakai SATU event saja
+newDrums.forEach(button => {
     button.addEventListener("pointerdown", function () {
         let key = this.innerText.trim().toLowerCase();
         playSound(key);
     });
 });
 
-// event keyboard (khusus laptop/PC)
+// keyboard (aman)
 document.addEventListener("keydown", function (event) {
-    let key = event.key.toLowerCase();
-    playSound(key);
+    playSound(event.key.toLowerCase());
 });
