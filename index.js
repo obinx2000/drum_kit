@@ -1,7 +1,7 @@
 // ambil semua tombol drum
 const drums = document.querySelectorAll(".drum");
 
-// fungsi utama untuk memainkan suara
+// fungsi untuk memainkan suara
 function playSound(key) {
     let sound;
 
@@ -18,25 +18,22 @@ function playSound(key) {
             return;
     }
 
-    sound.play().catch(error => {
-        console.log("Gagal memutar audio:", error);
+    // play + handle error (biar tidak ada warning)
+    sound.play().catch(err => {
+        console.log("Gagal memutar audio:", err);
     });
 }
 
-// event untuk klik (laptop) + sentuh (HP)
+// event untuk SEMUA device (HP + laptop)
 drums.forEach(button => {
-
-    function handlePress() {
+    button.addEventListener("pointerdown", function () {
         let key = this.innerText.trim().toLowerCase();
         playSound(key);
-    }
-
-    button.addEventListener("click", handlePress);       // laptop
-    button.addEventListener("touchstart", handlePress);  // HP
+    });
 });
 
-// event keyboard (hanya laptop / PC)
-document.addEventListener("keydown", function(event) {
+// event keyboard (khusus laptop/PC)
+document.addEventListener("keydown", function (event) {
     let key = event.key.toLowerCase();
     playSound(key);
 });
